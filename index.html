@@ -197,8 +197,10 @@ function handleSubmit(){
   if(cel.length<10){err.textContent='Preencha um celular válido';err.style.display='block';return;}
   err.style.display='none';
   // Send to Google Sheets
-  fetch('https://script.google.com/macros/s/AKfycbzzUsU4WRmS3lPoR0UqyDY6l6iuCDz3cTXvYBpFe0fE-vgb8C0zLfSw6J0PnDdlpr5T/exec',{
+fetch('https://script.google.com/macros/s/AKfycbzzUsU4WRmS3lPoR0UqyDY6l6iuCDz3cTXvYBpFe0fE-vgb8C0zLfSw6J0PnDdlpr5T/exec',{
     method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({cep:cep,celular:cel,origem:'site'}),
   }).catch(function(){});
   // Track events
