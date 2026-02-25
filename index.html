@@ -196,6 +196,11 @@ function handleSubmit(){
   if(cep.length!==8){err.textContent='Preencha um CEP válido (8 dígitos)';err.style.display='block';return;}
   if(cel.length<10){err.textContent='Preencha um celular válido';err.style.display='block';return;}
   err.style.display='none';
+  // Send to Google Sheets
+  fetch('https://script.google.com/macros/s/AKfycbzzUsU4WRmS3lPoR0UqyDY6l6iuCDz3cTXvYBpFe0fE-vgb8C0zLfSw6J0PnDdlpr5T/exec',{
+    method:'POST',
+    body:JSON.stringify({cep:cep,celular:cel,origem:'site'}),
+  }).catch(function(){});
   // Track events
   trackEvent('form_submit',{cep:cep,celular:cel});
   // Show result
