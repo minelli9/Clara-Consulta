@@ -196,8 +196,9 @@ function handleSubmit(){
   if(cep.length!==8){err.textContent='Preencha um CEP válido (8 dígitos)';err.style.display='block';return;}
   if(cel.length<10){err.textContent='Preencha um celular válido';err.style.display='block';return;}
   err.style.display='none';
-  // Send to Google Sheets
-new Image().src='https://script.google.com/macros/s/AKfycbwJ11mQiW1FgZGoIr5al1Pti6OV9nphBKiOMExs7leaIgmPVjBlnMdEdmrkb_omhjw2/exec?cep='+cep+'&cel='+cel+'&origem=site';  // Track events
+  // Send to Google Sheets via Image (bypasses CORS)
+  new Image().src='https://script.google.com/macros/s/AKfycbwJ11mQiW1FgZGoIr5al1Pti6OV9nphBKiOMExs7leaIgmPVjBlnMdEdmrkb_omhjw2/exec?cep='+cep+'&cel='+cel+'&origem=site';
+  // Track events
   trackEvent('form_submit',{cep:cep,celular:cel});
   // Show result
   document.getElementById('form-card').style.display='none';
