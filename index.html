@@ -24,6 +24,19 @@ s.parentNode.insertBefore(t,s)}(window,document,'script',
 fbq('init','2001632627066513');
 fbq('track','PageView');
 </script>
+<!-- End Meta Pixel Code -->  
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','2001632627066513');
+fbq('track','PageView');
+</script>
 <!-- End Meta Pixel Code -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-26TYPRBEQ0"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-26TYPRBEQ0');gtag('config','AW-17979914508');</script>
@@ -201,6 +214,8 @@ function handleSubmit(){
   if(cep.length!==8){err.textContent='Preencha um CEP válido (8 dígitos)';err.style.display='block';return;}
   if(cel.length<10){err.textContent='Preencha um celular válido';err.style.display='block';return;}
   err.style.display='none';
+  if(typeof fbq==='function') fbq('track','Lead',{content_name:'form_cep_cel'});
+  if(typeof gtag==='function') gtag('event','conversion',{'send_to':'AW-17979914508/ihsSCNTL0f8bEIzyvv1C','value':1.0,'currency':'BRL'});
   // Send to Google Sheets via Image (bypasses CORS)
 var ifr=document.getElementById('gs');if(!ifr){ifr=document.createElement('iframe');ifr.id='gs';ifr.name='gs';ifr.style.display='none';document.body.appendChild(ifr);}var fm=document.createElement('form');fm.method='GET';fm.action='https://script.google.com/macros/s/AKfycbwJ11mQiW1FgZGoIr5al1Pti6OV9nphBKiOMExs7leaIgmPVjBlnMdEdmrkb_omhjw2/exec';fm.target='gs';fm.innerHTML='<input name="cep" value="'+cep+'"><input name="cel" value="'+cel+'"><input name="origem" value="site">';document.body.appendChild(fm);fm.submit();fm.remove();  // Show result
   document.getElementById('form-card').style.display='none';
