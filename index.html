@@ -155,8 +155,23 @@ footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
     <p style="font-size:15px;color:var(--g500);margin-bottom:28px;">Informe seu CEP e celular para descobrir.</p>
     <div style="display:flex;flex-direction:column;gap:14px;">
       <input type="tel" id="cep" placeholder="CEP (ex: 14010-000)" maxlength="9"/>
-      <input type="tel" id="cel" placeholder="Celular (ex: 11 99999-9999)" maxlength="15"/>
-      <p id="form-error" style="font-size:13px;color:#EF4444;display:none;"></p>
+<input type="tel" id="cel" placeholder="Celular (ex: 11 99999-9999)" maxlength="15"/>
+      <select id="especialidade" style="font-family:'DM Sans',sans-serif;font-size:16px;padding:14px 16px;border:2px solid var(--g300);border-radius:10px;outline:none;color:var(--g500);background:#fff;width:100%;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg fill=%2264748B%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;background-size:20px;">
+        <option value="">Que tipo de médico você procura? (opcional)</option>
+        <option value="Clínico geral">Clínico geral</option>
+        <option value="Ginecologista">Ginecologista</option>
+        <option value="Dermatologista">Dermatologista</option>
+        <option value="Ortopedista">Ortopedista</option>
+        <option value="Cardiologista">Cardiologista</option>
+        <option value="Endocrinologista">Endocrinologista</option>
+        <option value="Oftalmologista">Oftalmologista</option>
+        <option value="Pediatra">Pediatra</option>
+        <option value="Psicólogo / Psiquiatra">Psicólogo / Psiquiatra</option>
+        <option value="Nutricionista">Nutricionista</option>
+        <option value="Outro">Outro</option>
+        <option value="Não sei">Não sei / quero orientação</option>
+      </select>
+      <p id="form-error"
       <button class="btn-primary" style="width:100%;font-size:17px;padding:16px;" onclick="handleSubmit()">Encontrar unidade</button>
     </div>
     <p style="font-size:11px;color:var(--g500);margin-top:16px;">🔒 Seus dados estão seguros e não serão compartilhados.</p>
