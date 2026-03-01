@@ -232,7 +232,7 @@ function handleSubmit(){
   if(typeof fbq==='function') fbq('track','Lead',{content_name:'form_cep_cel'});
   if(typeof gtag==='function') gtag('event','conversion',{'send_to':'AW-17979914508/ihsSCNTL0f8bEIzyvv1C','value':1.0,'currency':'BRL'});
   // Send to Google Sheets via Image (bypasses CORS)
-var ifr=document.getElementById('gs');if(!ifr){ifr=document.createElement('iframe');ifr.id='gs';ifr.name='gs';ifr.style.display='none';document.body.appendChild(ifr);}var fm=document.createElement('form');fm.method='GET';fm.action='https://script.google.com/macros/s/AKfycbwJ11mQiW1FgZGoIr5al1Pti6OV9nphBKiOMExs7leaIgmPVjBlnMdEdmrkb_omhjw2/exec';fm.target='gs';fm.innerHTML='<input name="cep" value="'+cep+'"><input name="cel" value="'+cel+'"><input name="origem" value="site">';document.body.appendChild(fm);fm.submit();fm.remove();  // Show result
+var ifr=document.getElementById('gs');if(!ifr){ifr=document.createElement('iframe');ifr.id='gs';ifr.name='gs';ifr.style.display='none';document.body.appendChild(ifr);}var fm=document.createElement('form');fm.method='GET';fm.action='https://script.google.com/macros/s/AKfycbwJ11mQiW1FgZGoIr5al1Pti6OV9nphBKiOMExs7leaIgmPVjBlnMdEdmrkb_omhjw2/exec';fm.target='gs';var esp=document.getElementById('especialidade').value;fm.innerHTML='<input name="cep" value="'+cep+'"><input name="cel" value="'+cel+'"><input name="origem" value="site"><input name="especialidade" value="'+esp+'">';document.body.appendChild(fm);fm.submit();fm.remove();  // Show result
   document.getElementById('form-card').style.display='none';
   document.getElementById('result-card').style.display='block';
 }
