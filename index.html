@@ -246,6 +246,14 @@ footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
     </div>
     <a href="#" onclick="event.preventDefault();showStep('form-card')" style="display:inline-block;margin-top:20px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
   </div>
+
+  <!-- Step 4: Calendly inline -->
+  <div class="form-card" id="step-calendly" style="display:none;max-width:980px;padding:24px 20px;">
+    <h3 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:10px;">Escolha o melhor horário para sua consulta</h3>
+    <p style="font-size:14px;color:var(--g500);margin-bottom:16px;">Agende sem sair do site.</p>
+    <div id="calendly-inline" style="min-width:320px;height:680px;border-radius:12px;overflow:hidden;background:#fff;"></div>
+    <a href="#" onclick="event.preventDefault();showStep(lastStepBeforeCalendly || 'step-modality')" style="display:inline-block;margin-top:14px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
+  </div>
 </section>
 
 <!-- FOOTER -->
@@ -281,7 +289,8 @@ document.getElementById('cel').addEventListener('input',function(e){
 });
 
 var savedCep='';
-var allSteps=['form-card','step-modality','step-em-casa','step-farmacia-loading','step-farmacia-match','step-farmacia-no-match'];
+var lastStepBeforeCalendly='step-modality';
+var allSteps=['form-card','step-modality','step-em-casa','step-farmacia-loading','step-farmacia-match','step-farmacia-no-match','step-calendly'];
 
 function showStep(id){
   allSteps.forEach(function(s){
@@ -398,8 +407,23 @@ function openCalendlyAndRedirect(modalidade){
   // Trackear evento
   trackEvent('open_calendly',{modalidade:modalidade});
 
-  // Abrir Calendly na mesma aba para que o redirect funcione corretamente
-  window.location.href = 'https://calendly.com/claramed-app/30min';
+  lastStepBeforeCalendly = modalidade === 'farmacia' ? 'step-farmacia-match' : 'step-modality';
+  showStep('step-calendly');
+
+  var calendlyEl=document.getElementById('calendly-inline');
+  if(!calendlyEl) return;
+
+  calendlyEl.innerHTML='';
+  if(window.Calendly && typeof window.Calendly.initInlineWidget==='function'){
+    window.Calendly.initInlineWidget({
+      url:'https://calendly.com/claramed-app/30min',
+      parentElement:calendlyEl,
+      prefill:{},
+      utm:{utmSource:'site',utmMedium:'inline',utmCampaign:modalidade}
+    });
+  }else{
+    calendlyEl.innerHTML='<p style="padding:24px;color:#334155;">Não foi possível carregar o calendário agora. <a href="https://calendly.com/claramed-app/30min" target="_blank" rel="noopener noreferrer">Abrir Calendly</a></p>';
+  }
 }
 
 </script>
