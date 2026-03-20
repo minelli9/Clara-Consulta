@@ -80,7 +80,8 @@ footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
 <body>
 
 <!-- HERO -->
-<section style="background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);text-align:center;position:relative;overflow:hidden;padding:80px 20px 60px;">
+<section style="background:url('/public/generated-image-1772677200590.png') center/cover no-repeat;text-align:center;position:relative;overflow:hidden;padding:80px 20px 60px;">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:0;"></div>
   <div style="position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.04);"></div>
   <div style="position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.03);"></div>
   <div style="max-width:640px;margin:0 auto;position:relative;z-index:1;">
@@ -150,12 +151,13 @@ footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
 
 <!-- FORM -->
 <section id="form" style="background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);">
+  <!-- Step 1: CEP Form -->
   <div class="form-card" id="form-card">
     <h2 style="text-align:center;">Tem unidade perto de mim?</h2>
     <p style="font-size:15px;color:var(--g500);margin-bottom:28px;">Informe seu CEP e celular para descobrir.</p>
     <div style="display:flex;flex-direction:column;gap:14px;">
       <input type="tel" id="cep" placeholder="CEP (ex: 14010-000)" maxlength="9"/>
-<input type="tel" id="cel" placeholder="Celular (ex: 11 99999-9999)" maxlength="15"/>
+      <input type="tel" id="cel" placeholder="Celular (ex: 11 99999-9999)" maxlength="15"/>
       <select id="especialidade" style="font-family:'DM Sans',sans-serif;font-size:16px;padding:14px 16px;border:2px solid var(--g300);border-radius:10px;outline:none;color:var(--g500);background:#fff;width:100%;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg fill=%2264748B%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;background-size:20px;">
         <option value="">Que tipo de médico você procura? (opcional)</option>
         <option value="Clínico geral">Clínico geral</option>
@@ -171,22 +173,75 @@ footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
         <option value="Outro">Outro</option>
         <option value="Não sei">Não sei / quero orientação</option>
       </select>
-      <p id="form-error"
+      <p id="form-error" style="display:none;color:#e53e3e;font-size:14px;margin:0;"></p>
       <button class="btn-primary" style="width:100%;font-size:17px;padding:16px;" onclick="handleSubmit()">Encontrar unidade</button>
     </div>
     <p style="font-size:11px;color:var(--g500);margin-top:16px;">🔒 Seus dados estão seguros e não serão compartilhados.</p>
   </div>
-  <div class="result-card" id="result-card" style="display:none;">
-    <div style="font-size:48px;margin-bottom:16px;">📍</div>
-    <h3 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:12px;">Ainda não temos unidade na sua região</h3>
-    <p style="font-size:15px;color:var(--g500);line-height:1.6;margin-bottom:28px;">Estamos expandindo! Quer ser avisado quando chegarmos perto de você?</p>
-    <div style="display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto;">
-      <button class="btn-primary" style="font-size:16px;padding:14px 24px;" onclick="trackEvent('notify_yes')">✅ Sim, me avise!</button>
-      <a href="https://forms.google.com" target="_blank" rel="noopener noreferrer" style="font-size:14px;font-weight:600;background:var(--blue-lt);color:var(--blue);border:none;border-radius:10px;padding:14px 24px;cursor:pointer;text-decoration:none;text-align:center;" onclick="trackEvent('pesquisa_click')">
-        🎁 Participe da pesquisa (20 min) e ganhe R$50
-      </a>
-      <p style="font-size:12px;color:var(--g500);margin-top:4px;">Pesquisa acadêmica Stanford — seus dados são confidenciais.</p>
+
+  <!-- Step 2: Choose modality -->
+  <div class="form-card" id="step-modality" style="display:none;">
+    <h2 style="text-align:center;margin-bottom:8px;">Como você prefere ser atendido?</h2>
+    <p style="font-size:15px;color:var(--g500);margin-bottom:28px;">Escolha a opção ideal para você.</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+      <button onclick="handleEmCasa()" style="flex:1;min-width:180px;max-width:220px;background:#fff;border:2px solid var(--g300);border-radius:14px;padding:28px 18px;cursor:pointer;transition:border-color .2s,transform .2s;text-align:center;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--g300)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:10px;">🏠</div>
+        <div style="font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px;">Em casa</div>
+        <div style="font-size:13px;color:var(--g500);line-height:1.4;">Consulta por vídeo no conforto da sua casa</div>
+      </button>
+      <button onclick="handleFarmacia()" style="flex:1;min-width:180px;max-width:220px;background:#fff;border:2px solid var(--g300);border-radius:14px;padding:28px 18px;cursor:pointer;transition:border-color .2s,transform .2s;text-align:center;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--g300)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:10px;">💊</div>
+        <div style="font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px;">Na farmácia</div>
+        <div style="font-size:13px;color:var(--g500);line-height:1.4;">Médico online com medição de sinais vitais e suporte presencial na farmácia</div>
+      </button>
     </div>
+    <a href="#" onclick="event.preventDefault();showStep('form-card')" style="display:inline-block;margin-top:20px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
+  </div>
+
+  <!-- Step 3a: Em casa result -->
+  <div class="form-card" id="step-em-casa" style="display:none;">
+    <div style="font-size:48px;margin-bottom:16px;">🏠</div>
+    <h3 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:12px;">Ótimo! Em breve você poderá agendar sua teleconsulta.</h3>
+    <p style="font-size:15px;color:var(--g500);line-height:1.6;margin-bottom:28px;">Deixe seu contato para ser avisado assim que as consultas por vídeo estiverem disponíveis.</p>
+    <a href="https://forms.gle/PLACEHOLDER" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:inline-block;text-decoration:none;font-size:16px;padding:14px 36px;" onclick="trackEvent('teleconsulta_notify')">Quero ser avisado</a>
+    <br><a href="#" onclick="event.preventDefault();showStep('form-card')" style="display:inline-block;margin-top:20px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
+  </div>
+
+  <!-- Step 3b: Farmácia - loading -->
+  <div class="form-card" id="step-farmacia-loading" style="display:none;">
+    <div style="font-size:48px;margin-bottom:16px;">💊</div>
+    <h3 style="font-size:20px;font-weight:700;color:var(--navy);margin-bottom:12px;">Verificando farmácias na sua região…</h3>
+    <div style="width:40px;height:40px;border:4px solid var(--g300);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:20px auto;"></div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+  </div>
+
+  <!-- Step 3b-match: Farmácia found -->
+  <div class="form-card" id="step-farmacia-match" style="display:none;">
+    <div style="font-size:48px;margin-bottom:16px;">✅</div>
+    <h3 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:12px;">Ótimo! Temos uma farmácia parceira na sua região.</h3>
+    <p style="font-size:15px;color:var(--g500);line-height:1.6;margin-bottom:28px;">Agende sua consulta agora mesmo.</p>
+    <a href="https://cal.com/PLACEHOLDER" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:inline-block;text-decoration:none;font-size:16px;padding:14px 36px;" onclick="trackEvent('farmacia_agendar')">Agendar consulta</a>
+    <br><a href="#" onclick="event.preventDefault();showStep('form-card')" style="display:inline-block;margin-top:20px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
+  </div>
+
+  <!-- Step 3b-no-match: Farmácia not found -->
+  <div class="form-card" id="step-farmacia-no-match" style="display:none;">
+    <div style="font-size:48px;margin-bottom:16px;">📍</div>
+    <h3 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:12px;">Ainda não temos farmácia parceira na sua região.</h3>
+    <p style="font-size:15px;color:var(--g500);line-height:1.6;margin-bottom:28px;">Mas você pode fazer a consulta em casa!</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+      <button onclick="handleEmCasa()" style="flex:1;min-width:180px;max-width:220px;background:#fff;border:2px solid var(--g300);border-radius:14px;padding:28px 18px;cursor:pointer;transition:border-color .2s,transform .2s;text-align:center;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--g300)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:10px;">🏠</div>
+        <div style="font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px;">Em casa</div>
+        <div style="font-size:13px;color:var(--g500);line-height:1.4;">Consulta por vídeo no conforto da sua casa</div>
+      </button>
+      <button onclick="handleFarmacia()" style="flex:1;min-width:180px;max-width:220px;background:#fff;border:2px solid var(--g300);border-radius:14px;padding:28px 18px;cursor:pointer;transition:border-color .2s,transform .2s;text-align:center;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--g300)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:10px;">💊</div>
+        <div style="font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px;">Na farmácia</div>
+        <div style="font-size:13px;color:var(--g500);line-height:1.4;">Médico online com medição de sinais vitais e suporte presencial na farmácia</div>
+      </button>
+    </div>
+    <a href="#" onclick="event.preventDefault();showStep('form-card')" style="display:inline-block;margin-top:20px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
   </div>
 </section>
 
@@ -222,19 +277,65 @@ document.getElementById('cel').addEventListener('input',function(e){
   this.value=d;
 });
 
+var savedCep='';
+var allSteps=['form-card','step-modality','step-em-casa','step-farmacia-loading','step-farmacia-match','step-farmacia-no-match'];
+
+function showStep(id){
+  allSteps.forEach(function(s){document.getElementById(s).style.display='none';});
+  var el=document.getElementById(id);
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
 function handleSubmit(){
-  const cep=document.getElementById('cep').value.replace(/\D/g,'');
-  const cel=document.getElementById('cel').value.replace(/\D/g,'');
-  const err=document.getElementById('form-error');
+  var cep=document.getElementById('cep').value.replace(/\D/g,'');
+  var cel=document.getElementById('cel').value.replace(/\D/g,'');
+  var err=document.getElementById('form-error');
   if(cep.length!==8){err.textContent='Preencha um CEP válido (8 dígitos)';err.style.display='block';return;}
   if(cel.length<10){err.textContent='Preencha um celular válido';err.style.display='block';return;}
   err.style.display='none';
+  savedCep=cep;
   if(typeof fbq==='function') fbq('track','Lead',{content_name:'form_cep_cel'});
   if(typeof gtag==='function') gtag('event','conversion',{'send_to':'AW-17979914508/ihsSCNTL0f8bEIzyvv1C','value':1.0,'currency':'BRL'});
-  // Send to Google Sheets via Image (bypasses CORS)
-var ifr=document.getElementById('gs');if(!ifr){ifr=document.createElement('iframe');ifr.id='gs';ifr.name='gs';ifr.style.display='none';document.body.appendChild(ifr);}var fm=document.createElement('form');fm.method='GET';fm.action='https://script.google.com/macros/s/AKfycbwJ11mQiW1FgZGoIr5al1Pti6OV9nphBKiOMExs7leaIgmPVjBlnMdEdmrkb_omhjw2/exec';fm.target='gs';var esp=document.getElementById('especialidade').value;fm.innerHTML='<input name="cep" value="'+cep+'"><input name="cel" value="'+cel+'"><input name="origem" value="site"><input name="especialidade" value="'+esp+'">';document.body.appendChild(fm);fm.submit();fm.remove();  // Show result
-  document.getElementById('form-card').style.display='none';
-  document.getElementById('result-card').style.display='block';
+  // Send to Google Sheets
+  var ifr=document.getElementById('gs');if(!ifr){ifr=document.createElement('iframe');ifr.id='gs';ifr.name='gs';ifr.style.display='none';document.body.appendChild(ifr);}var fm=document.createElement('form');fm.method='GET';fm.action='https://script.google.com/macros/s/AKfycbwJ11mQiW1FgZGoIr5al1Pti6OV9nphBKiOMExs7leaIgmPVjBlnMdEdmrkb_omhjw2/exec';fm.target='gs';var esp=document.getElementById('especialidade').value;fm.innerHTML='<input name="cep" value="'+cep+'"><input name="cel" value="'+cel+'"><input name="origem" value="site"><input name="especialidade" value="'+esp+'">';document.body.appendChild(fm);fm.submit();fm.remove();
+  trackEvent('form_submit',{cep:cep});
+  showStep('step-modality');
+}
+
+function handleEmCasa(){
+  trackEvent('escolha_em_casa');
+  showStep('step-em-casa');
+}
+
+function handleFarmacia(){
+  trackEvent('escolha_farmacia');
+  showStep('step-farmacia-loading');
+  var SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vTvituNOESdojX8mTSFlbruip1QL6yMMz51Keqo_GCDlOS43KjlAGYZfyKfUUw7_kJHjPp5jbqJimi7/pub?output=csv';
+  fetch(SHEET_CSV)
+    .then(function(r){return r.text();})
+    .then(function(csv){
+      var lines=csv.split('\n');
+      var header=lines[0].split(',');
+      var cepCol=header.findIndex(function(h){return h.trim().toLowerCase().replace(/"/g,'')==='cep';});
+      if(cepCol===-1) cepCol=0;
+      var prefixes=[];
+      for(var i=1;i<lines.length;i++){
+        var cols=lines[i].split(',');
+        if(cols[cepCol]){
+          prefixes.push(cols[cepCol].trim().replace(/"/g,'').replace(/\D/g,''));
+        }
+      }
+      var match=prefixes.some(function(p){return p.length>0 && savedCep.substring(0,p.length)===p;});
+      if(match){
+        showStep('step-farmacia-match');
+      }else{
+        showStep('step-farmacia-no-match');
+      }
+    })
+    .catch(function(){
+      showStep('step-farmacia-no-match');
+    });
 }
 
 function trackEvent(name,params){
