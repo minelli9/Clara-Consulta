@@ -317,7 +317,20 @@ function submitLeadToSheets(cep,cel,especialidade){
   ping.src=url;
 
   if(window.fetch){
-    fetch(url,{method:'GET',mode:'no-cors',keepalive:true,cache:'no-store'}).catch(function(){});
+    fetch('/api/lead',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({cep:cep,cel:cel,origem:'site',especialidade:especialidade||''}),
+      keepalive:true
+    })
+    .then(function(r){
+      if(!r.ok){
+        return fetch(url,{method:'GET',mode:'no-cors',keepalive:true,cache:'no-store'});
+      }
+    })
+    .catch(function(){
+      fetch(url,{method:'GET',mode:'no-cors',keepalive:true,cache:'no-store'}).catch(function(){});
+    });
   }
 }
 
