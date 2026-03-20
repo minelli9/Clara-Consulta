@@ -308,17 +308,16 @@ function submitLeadToSheets(cep,cel,especialidade){
   var qs='?cep='+encodeURIComponent(cep)
     +'&cel='+encodeURIComponent(cel)
     +'&origem='+encodeURIComponent('site')
-    +'&especialidade='+encodeURIComponent(especialidade||'');
+    +'&especialidade='+encodeURIComponent(especialidade||'')
+    +'&_t='+(Date.now());
   var url=baseUrl+qs;
 
+  var ping=new Image();
+  ping.referrerPolicy='no-referrer-when-downgrade';
+  ping.src=url;
+
   if(window.fetch){
-    fetch(url,{method:'GET',mode:'no-cors',keepalive:true}).catch(function(){
-      var ping=new Image();
-      ping.src=url+'&_t='+(Date.now());
-    });
-  }else{
-    var ping=new Image();
-    ping.src=url+'&_t='+(Date.now());
+    fetch(url,{method:'GET',mode:'no-cors',keepalive:true,cache:'no-store'}).catch(function(){});
   }
 }
 
