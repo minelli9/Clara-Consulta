@@ -8,7 +8,14 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
 
-  const source = req.method === 'POST' ? (req.body || {}) : (req.query || {});
+  let source = req.method === 'POST' ? (req.body || {}) : (req.query || {});
+  if (typeof source === 'string') {
+    try {
+      source = JSON.parse(source);
+    } catch (_) {
+      source = {};
+    }
+  }
   const cep = String(source.cep || '').replace(/\D/g, '');
   const cel = String(source.cel || '').replace(/\D/g, '');
   const especialidade = String(source.especialidade || '');
@@ -24,7 +31,8 @@ export default async function handler(req, res) {
     cel,
     especialidade,
     origem,
-    _t: String(Date.now())
+    _t: String(Date.now()),
+    source: 'vercel-api'
   });
 
   try {

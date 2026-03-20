@@ -304,7 +304,7 @@ function showStep(id){
 }
 
 function submitLeadToSheets(cep,cel,especialidade){
-  var baseUrl='https://script.google.com/macros/s/AKfycbxb99bI1kBnmZJtbgHCFIyw6_FIy6U752V0XdcKQM4aKBgmakvuueDPZhyok-mER2yB/exec';
+  var baseUrl='/api/lead';
   var qs='?cep='+encodeURIComponent(cep)
     +'&cel='+encodeURIComponent(cel)
     +'&origem='+encodeURIComponent('site')
@@ -317,20 +317,7 @@ function submitLeadToSheets(cep,cel,especialidade){
   ping.src=url;
 
   if(window.fetch){
-    fetch('/api/lead',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({cep:cep,cel:cel,origem:'site',especialidade:especialidade||''}),
-      keepalive:true
-    })
-    .then(function(r){
-      if(!r.ok){
-        return fetch(url,{method:'GET',mode:'no-cors',keepalive:true,cache:'no-store'});
-      }
-    })
-    .catch(function(){
-      fetch(url,{method:'GET',mode:'no-cors',keepalive:true,cache:'no-store'}).catch(function(){});
-    });
+    fetch(url,{method:'GET',keepalive:true,cache:'no-store'}).catch(function(){});
   }
 }
 
