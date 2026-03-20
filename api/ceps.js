@@ -3,14 +3,8 @@ export default async function handler(req, res) {
     'https://docs.google.com/spreadsheets/d/1wJcOzqIAHniWISLCBMXyUyudumtYFkqO7knM-GzChPw/export?format=csv';
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { redirect: 'follow' });
     const text = await response.text();
-
-    console.log('=== CEPs API DEBUG ===');
-    console.log('Status:', response.status);
-    console.log('CSV Length:', text.length);
-    console.log('First 500 chars:', text.substring(0, 500));
-    console.log('=== END DEBUG ===');
 
     res.setHeader('Content-Type', 'text/plain');
     res.setHeader('Access-Control-Allow-Origin', '*');

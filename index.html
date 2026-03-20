@@ -315,21 +315,14 @@ function handleFarmacia(){
   fetch(SHEET_CSV)
     .then(function(r){return r.text();})
     .then(function(csv){
-      console.log('CSV recebido:', csv);
-      console.log('CSV length:', csv.length);
-
-      // Parse CSV levando em conta espaços e diferentes formatos
       var lines=csv.trim().split(/\r?\n/);
-      console.log('Linhas totais:', lines.length);
 
       if(lines.length < 2) {
-        console.error('CSV vazio ou com poucas linhas');
         showStep('step-farmacia-no-match');
         return;
       }
 
       var header=lines[0].split(',').map(function(h){return h.trim();});
-      console.log('Header:', header);
 
       // Procura pela coluna "cep" (case-insensitive)
       var cepCol=-1;
@@ -340,16 +333,14 @@ function handleFarmacia(){
           break;
         }
       }
-      console.log('Coluna CEP encontrada no índice:', cepCol);
 
       if(cepCol===-1) {
-        console.warn('Coluna CEP não encontrada, tentando coluna 0');
         cepCol=0;
       }
 
       var prefixes=[];
       for(var i=1; i<lines.length; i++){
-        if(!lines[i].trim()) continue; // pula linhas vazias
+        if(!lines[i].trim()) continue;
         var cols=lines[i].split(',').map(function(c){return c.trim();});
         if(cols[cepCol]){
           var prefix=cols[cepCol].replace(/"/g,'').replace(/\D/g,'');
@@ -358,16 +349,11 @@ function handleFarmacia(){
           }
         }
       }
-      console.log('Prefixos encontrados:', prefixes);
-      console.log('CEP do usuário:', savedCep);
 
       var match=prefixes.some(function(p){
-        var isMatch = savedCep.substring(0, p.length) === p;
-        console.log('Comparando "' + savedCep + '" com prefixo "' + p + '": ' + isMatch);
-        return isMatch && p.length > 0;
+        return p.length>0 && savedCep.substring(0, p.length) === p;
       });
 
-      console.log('Match encontrado?', match);
       if(match){
         showStep('step-farmacia-match');
       }else{
