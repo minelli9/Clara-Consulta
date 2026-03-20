@@ -311,7 +311,7 @@ function handleEmCasa(){
 function handleFarmacia(){
   trackEvent('escolha_farmacia');
   showStep('step-farmacia-loading');
-  var SHEET_CSV='https://corsproxy.io/?https://docs.google.com/spreadsheets/d/e/2PACX-1vTvituNOESdojX8mTSFlbruip1QL6yMMz51Keqo_GCDlOS43KjlAGYZfyKfUUw7_kJHjPp5jbqJimi7/pub?output=csv';
+  var SHEET_CSV='/api/ceps';
   fetch(SHEET_CSV)
     .then(function(r){return r.text();})
     .then(function(csv){
