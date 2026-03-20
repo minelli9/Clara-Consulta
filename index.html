@@ -399,6 +399,25 @@ function trackEvent(name,params){
   console.log('Event:',name,params||'');
 }
 
+var calendlyListenerAttached=false;
+function attachCalendlyListener(){
+  if(calendlyListenerAttached) return;
+  window.addEventListener('message',function(e){
+    if(!e.origin || e.origin.indexOf('calendly.com')===-1) return;
+    if(!e.data || e.data.event!=='calendly.event_scheduled') return;
+
+    trackEvent('calendly_event_scheduled');
+    var modalidade=sessionStorage.getItem('consulta_modalidade')||'';
+    var especialidade=sessionStorage.getItem('consulta_especialidade')||'';
+    var qs=new URLSearchParams();
+    if(modalidade) qs.set('modalidade',modalidade);
+    if(especialidade) qs.set('especialidade',especialidade);
+
+    window.location.href='/pagamento.html'+(qs.toString() ? '?'+qs.toString() : '');
+  });
+  calendlyListenerAttached=true;
+}
+
 function openCalendlyAndRedirect(modalidade){
   // Salvar contexto no sessionStorage para possível uso futuro
   sessionStorage.setItem('consulta_modalidade',modalidade);
@@ -413,6 +432,7 @@ function openCalendlyAndRedirect(modalidade){
   var calendlyEl=document.getElementById('calendly-inline');
   if(!calendlyEl) return;
 
+  attachCalendlyListener();
   calendlyEl.innerHTML='';
   if(window.Calendly && typeof window.Calendly.initInlineWidget==='function'){
     window.Calendly.initInlineWidget({
