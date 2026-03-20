@@ -315,25 +315,34 @@ function handleFarmacia(){
   fetch(SHEET_CSV)
     .then(function(r){return r.text();})
     .then(function(csv){
+      console.log('CSV recebido:', csv);
       var lines=csv.split('\n');
+      console.log('Linhas totais:', lines.length);
       var header=lines[0].split(',');
+      console.log('Header:', header);
       var cepCol=header.findIndex(function(h){return h.trim().toLowerCase().replace(/"/g,'')==='cep';});
+      console.log('Coluna CEP encontrada no índice:', cepCol);
       if(cepCol===-1) cepCol=0;
       var prefixes=[];
       for(var i=1;i<lines.length;i++){
         var cols=lines[i].split(',');
         if(cols[cepCol]){
-          prefixes.push(cols[cepCol].trim().replace(/"/g,'').replace(/\D/g,''));
+          var prefix=cols[cepCol].trim().replace(/"/g,'').replace(/\D/g,'');
+          prefixes.push(prefix);
         }
       }
+      console.log('Prefixos encontrados:', prefixes);
+      console.log('CEP do usuário:', savedCep);
       var match=prefixes.some(function(p){return p.length>0 && savedCep.substring(0,p.length)===p;});
+      console.log('Match encontrado?', match);
       if(match){
         showStep('step-farmacia-match');
       }else{
         showStep('step-farmacia-no-match');
       }
     })
-    .catch(function(){
+    .catch(function(err){
+      console.error('Erro ao fetch:', err);
       showStep('step-farmacia-no-match');
     });
 }
