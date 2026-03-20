@@ -216,26 +216,25 @@ document.getElementById('receipt-file').addEventListener('change', function(e) {
 
 // Enviar ao WhatsApp
 function sendToWhatsApp() {
-  const fullName = getQueryParam('invitee_full_name');
-  const eventStartTime = getQueryParam('event_start_time');
-  const eventTypeName = getQueryParam('event_type_name');
+  const fullName = getQueryParam('invitee_full_name') || sessionStorage.getItem('consulta_nome') || 'Paciente';
+  const eventStartTime = getQueryParam('event_start_time') || sessionStorage.getItem('consulta_event_start');
+  const eventTypeName = getQueryParam('event_type_name') || sessionStorage.getItem('consulta_event_type') || sessionStorage.getItem('consulta_especialidade') || 'especialista';
 
-  if (!fullName || !eventStartTime) {
-    alert('Erro ao recuperar dados da consulta. Verifique o link.');
-    return;
+  let message = `Olá! Já realizei o pagamento de R$60 da minha consulta com ${eventTypeName}. Segue em anexo o comprovante de pagamento. \n\nNome: ${fullName}`;
+  if (eventStartTime) {
+    const date = new Date(eventStartTime);
+    if (!isNaN(date.getTime())) {
+      const formatter = new Intl.DateTimeFormat('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      const formattedDate = formatter.format(date);
+      message = `Olá! Já realizei o pagamento de R$60 da minha consulta agendada em ${formattedDate} com ${eventTypeName}. Segue em anexo o comprovante de pagamento. \n\nNome: ${fullName}`;
+    }
   }
-
-  const date = new Date(eventStartTime);
-  const formatter = new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-  const formattedDate = formatter.format(date);
-
-  const message = `Olá! Já realizei o pagamento de R$60 da minha consulta agendada em ${formattedDate} com ${eventTypeName || 'especialista'}. Segue em anexo o comprovante de pagamento. \n\nNome: ${fullName}`;
 
   const whatsappNumber = '5511951785663';
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -257,41 +256,42 @@ function sendToWhatsApp() {
 
 // Carregar dados da consulta
 function loadConsultationData() {
-  const fullName = getQueryParam('invitee_full_name');
-  const eventTypeName = getQueryParam('event_type_name');
-  const eventStartTime = getQueryParam('event_start_time');
+  const fullName = getQueryParam('invitee_full_name') || sessionStorage.getItem('consulta_nome') || 'Paciente';
+  const eventTypeName = getQueryParam('event_type_name') || sessionStorage.getItem('consulta_event_type') || sessionStorage.getItem('consulta_especialidade') || 'especialista';
+  const eventStartTime = getQueryParam('event_start_time') || sessionStorage.getItem('consulta_event_start');
   const consultationDetailsDiv = document.getElementById('consultation-details');
 
-  if (!fullName || !eventStartTime) {
-    showFallback();
-    return;
-  }
-
-  // Formatar hora em pt-BR
-  const date = new Date(eventStartTime);
-  const formatter = new Intl.DateTimeFormat('pt-BR', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-  const formattedDate = formatter.format(date);
-
-  // Preencher detalhes
-  consultationDetailsDiv.innerHTML = `
+  var detailsHtml = `
     <div style="text-align:center;">
       <p style="font-size:16px;color:var(--navy);margin-bottom:4px;font-weight:600;">
         ${fullName}
       </p>
       <p style="font-size:14px;color:var(--g500);margin:6px 0;">
-        📋 Consulta com <strong>${eventTypeName || 'especialista'}</strong>
-      </p>
-      <p style="font-size:14px;color:var(--g500);">
-        📅 ${formattedDate}
-      </p>
-    </div>`;
+        📋 Consulta com <strong>${eventTypeName}</strong>
+      </p>`;
+
+  if (eventStartTime) {
+    const date = new Date(eventStartTime);
+    if (!isNaN(date.getTime())) {
+      const formatter = new Intl.DateTimeFormat('pt-BR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      const formattedDate = formatter.format(date);
+      detailsHtml += `<p style="font-size:14px;color:var(--g500);">📅 ${formattedDate}</p>`;
+    } else {
+      detailsHtml += `<p style="font-size:14px;color:var(--g500);">📅 Horário confirmado no agendamento</p>`;
+    }
+  } else {
+    detailsHtml += `<p style="font-size:14px;color:var(--g500);">📅 Horário confirmado no agendamento</p>`;
+  }
+
+  detailsHtml += `</div>`;
+  consultationDetailsDiv.innerHTML = detailsHtml;
 
   // Trackear evento
   if (typeof gtag === 'function') {
@@ -306,40 +306,6 @@ function loadConsultationData() {
       content_type: 'payment_page'
     });
   }
-}
-
-// Fallback se não houver parâmetros
-function showFallback() {
-  document.documentElement.innerHTML = `
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-      <meta charset="UTF-8"/>
-      <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-      <title>Erro — Clara Consulta</title>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-      <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'DM Sans',sans-serif;color:#334155;}
-        :root{--navy:#1B3A5C;--accent:#00BFA5;}
-      </style>
-    </head>
-    <body>
-      <section style="padding:80px 20px;text-align:center;min-height:100vh;display:flex;align-items:center;justify-content:center;">
-        <div style="max-width:480px;">
-          <div style="font-size:64px;margin-bottom:20px;">❌</div>
-          <h1 style="color:var(--navy);margin-bottom:16px;font-size:28px;">Algo deu errado</h1>
-          <p style="color:#64748B;margin-bottom:20px;line-height:1.6;">
-            Não conseguimos recuperar os dados da sua consulta.
-            Verifique se o link está correto ou entre em contato conosco pelo WhatsApp.
-          </p>
-          <a href="https://wa.me/5511951785663?text=Ol%C3%A1!%20Preciso%20de%20ajuda%20com%20meu%20pagamento%20de%20consulta." target="_blank" style="display:inline-block;background:var(--accent);color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px;">
-            📲 Contatar WhatsApp
-          </a>
-        </div>
-      </section>
-    </body>
-    </html>`;
 }
 
 // Inicializar ao carregar página
