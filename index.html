@@ -203,7 +203,7 @@ footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
     <div style="font-size:48px;margin-bottom:16px;">🏠</div>
     <h3 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:12px;">Ótimo! Em breve você poderá agendar sua teleconsulta.</h3>
     <p style="font-size:15px;color:var(--g500);line-height:1.6;margin-bottom:28px;">Deixe seu contato para ser avisado assim que as consultas por vídeo estiverem disponíveis.</p>
-    <a href="https://calendly.com/claramed-app/30min" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:inline-block;width:100%;text-align:center;text-decoration:none;font-size:16px;padding:14px 36px;">Quero ser avisado</a>
+    <a href="#" onclick="openCalendlyAndRedirect('em-casa'); return false;" class="btn-primary" style="display:inline-block;width:100%;text-align:center;text-decoration:none;font-size:16px;padding:14px 36px;">Quero ser avisado</a>
     <br><a href="#" onclick="event.preventDefault();showStep('form-card')" style="display:inline-block;margin-top:20px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
   </div>
 
@@ -220,7 +220,7 @@ footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
     <div style="font-size:48px;margin-bottom:16px;">✅</div>
     <h3 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:12px;">Ótimo! Temos uma farmácia parceira na sua região.</h3>
     <p style="font-size:15px;color:var(--g500);line-height:1.6;margin-bottom:28px;">Agende sua consulta agora mesmo.</p>
-    <a href="https://calendly.com/claramed-app/30min" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:inline-block;width:100%;text-align:center;text-decoration:none;font-size:16px;padding:14px 36px;">Agendar consulta</a>
+    <a href="#" onclick="openCalendlyAndRedirect('farmacia'); return false;" class="btn-primary" style="display:inline-block;width:100%;text-align:center;text-decoration:none;font-size:16px;padding:14px 36px;">Agendar consulta</a>
     <br><a href="#" onclick="event.preventDefault();showStep('form-card')" style="display:inline-block;margin-top:20px;font-size:14px;color:var(--g500);text-decoration:none;">← Voltar</a>
   </div>
 
@@ -377,6 +377,19 @@ function trackEvent(name,params){
   }
   console.log('Event:',name,params||'');
 }
+
+function openCalendlyAndRedirect(modalidade){
+  // Salvar contexto no sessionStorage para possível uso futuro
+  sessionStorage.setItem('consulta_modalidade',modalidade);
+  sessionStorage.setItem('consulta_especialidade',document.getElementById('especialidade').value||'');
+
+  // Trackear evento
+  trackEvent('open_calendly',{modalidade:modalidade});
+
+  // Abrir Calendly em nova aba (Calendly fará o redirect automaticamente após booking)
+  window.open('https://calendly.com/claramed-app/30min','_blank');
+}
+
 </script>
 </body>
 </html>

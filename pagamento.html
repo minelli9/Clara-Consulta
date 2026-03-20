@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Confirmar Pagamento — Clara Consulta</title>
+<meta name="description" content="Finalize o pagamento via Pix para confirmar sua consulta médica."/>
+<link rel="icon" href="/logo-icon.png" type="image/png"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','2001632627066513');
+fbq('track','PageView');
+</script>
+<!-- End Meta Pixel Code -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-26TYPRBEQ0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-26TYPRBEQ0');gtag('config','AW-17979914508');</script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;color:#334155;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+:root{--navy:#1B3A5C;--blue:#1565C0;--blue-lt:#E3F2FD;--accent:#00BFA5;--accent-dk:#00997D;--purple:#5C3D7A;--off-white:#F8FAFB;--g100:#F1F5F9;--g300:#CBD5E1;--g500:#64748B;--g700:#334155;}
+.logo-text{font-size:26px;font-weight:800;letter-spacing:-0.5px;color:#fff;}
+.logo-text span{color:#B388FF;}
+.btn-primary{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:16px 36px;cursor:pointer;box-shadow:0 4px 20px rgba(0,191,165,.4);transition:all .2s;}
+.btn-primary:hover:not(:disabled){background:var(--accent-dk);transform:translateY(-2px);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.card{background:#fff;border-radius:16px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.form-card{max-width:520px;margin:0 auto;background:#fff;border-radius:20px;padding:48px 32px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08);}
+footer{background:var(--navy);padding:36px 20px;text-align:center;}
+footer a{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;}
+section{padding:64px 20px;}
+h1{font-size:32px;font-weight:800;color:#fff;margin-bottom:12px;}
+.subtitle{font-size:16px;color:rgba(255,255,255,.8);margin-bottom:20px;}
+@media(max-width:480px){
+  .form-card{padding:32px 20px;}
+  h1{font-size:24px;}
+  section{padding:48px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO COM CONFIRMAÇÃO -->
+<section style="background:linear-gradient(135deg,#10b981 0%,#059669 100%);text-align:center;">
+  <div style="max-width:640px;margin:0 auto;">
+    <div style="font-size:64px;margin-bottom:20px;">✅</div>
+    <h1>Consulta agendada com sucesso!</h1>
+    <p class="subtitle">Finalize o pagamento abaixo para confirmar sua consulta.</p>
+  </div>
+</section>
+
+<!-- FORMULÁRIO DE PAGAMENTO -->
+<section style="background:var(--off-white);">
+  <div class="form-card">
+    <!-- Dados da Consulta -->
+    <div id="consultation-details" style="text-align:center;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--g300);">
+      <div style="width:40px;height:40px;border:4px solid var(--g300);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;"></div>
+    </div>
+
+    <!-- Valor -->
+    <div style="text-align:center;margin:28px 0;">
+      <div style="font-size:32px;font-weight:800;color:var(--accent);">R$ 60,00</div>
+      <p style="color:var(--g500);font-size:14px;">Valor da consulta</p>
+    </div>
+
+    <!-- QR Code -->
+    <div style="text-align:center;margin:28px 0;">
+      <p style="font-size:14px;color:var(--g500);margin-bottom:16px;font-weight:600;">Escaneie o QR Code para pagar via Pix</p>
+      <div style="width:220px;height:220px;margin:0 auto;background:var(--g100);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <img id="qr-code" src="[PLACEHOLDER_QR_CODE]" style="max-width:200px;max-height:200px;display:none;" alt="QR Code Pix"/>
+        <div id="qr-placeholder" style="text-align:center;color:var(--g500);">
+          <div style="font-size:48px;margin-bottom:8px;">📱</div>
+          <p style="font-size:12px;">Aguardando QR Code...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ou copie a chave Pix -->
+    <div style="background:var(--g100);padding:16px;border-radius:10px;margin:28px 0;">
+      <p style="font-size:12px;color:var(--g500);margin-bottom:12px;font-weight:600;">Ou copie a chave Pix</p>
+      <div style="display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;">
+        <input type="text" id="pix-key" value="[CHAVE_PIX_AQUI]" readonly style="border:none;background:#fff;padding:10px 12px;border-radius:6px;flex:1;min-width:200px;max-width:280px;text-align:center;font-family:monospace;font-size:13px;"/>
+        <button onclick="copyPixKey()" style="background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;cursor:pointer;white-space:nowrap;font-weight:600;transition:all .2s;">Copiar</button>
+      </div>
+      <p id="copy-feedback" style="font-size:12px;color:var(--accent);margin-top:8px;display:none;font-weight:600;">✓ Copiado para a área de transferência!</p>
+    </div>
+
+    <!-- Upload Comprovante -->
+    <div style="margin:28px 0;text-align:left;">
+      <label style="display:block;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:10px;">Comprovar pagamento (PNG ou JPG)*</label>
+      <input type="file" id="receipt-file" accept="image/png,image/jpeg" style="width:100%;padding:12px;border:2px solid var(--g300);border-radius:8px;font-family:'DM Sans',sans-serif;cursor:pointer;"/>
+      <p id="receipt-status" style="font-size:12px;color:var(--g500);margin-top:6px;"></p>
+    </div>
+
+    <!-- Botão WhatsApp -->
+    <button id="whatsapp-btn" class="btn-primary" style="width:100%;margin-top:20px;font-size:16px;padding:16px;" onclick="sendToWhatsApp()" disabled>
+      📲 Enviar comprovante por WhatsApp
+    </button>
+
+    <!-- Informação -->
+    <p style="font-size:12px;color:var(--g500);text-align:center;margin-top:20px;line-height:1.6;">
+      Após o pagamento, você receberá o link da consulta por WhatsApp em até 5 minutos.
+      <br/><br/>
+      <strong>Dúvidas?</strong> <a href="https://wa.me/5511951785663" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;">Fale conosco no WhatsApp</a>
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="logo-text" style="font-size:20px;">Clara<span>Consulta</span></span>
+  <p style="font-size:13px;color:rgba(255,255,255,.5);margin-top:12px;">Saúde perto de casa, preço justo.</p>
+  <div style="display:flex;justify-content:center;gap:20px;margin-top:16px;">
+    <a href="https://instagram.com/claraconsulta" target="_blank">Instagram</a>
+    <a href="https://facebook.com/claraconsulta" target="_blank">Facebook</a>
+    <a href="https://wa.me/551151785663" target="_blank">WhatsApp</a>
+  </div>
+  <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:20px;">© 2026 Clara Consulta. Todos os direitos reservados.</p>
+</footer>
+
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<script>
+// Função para ler URL params
+function getQueryParam(param) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(param);
+}
+
+// Copiar chave Pix
+function copyPixKey() {
+  const pixKey = document.getElementById('pix-key');
+  const feedback = document.getElementById('copy-feedback');
+
+  // Fallback para browsers antigos
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(pixKey.value).then(() => {
+      showCopyFeedback();
+    });
+  } else {
+    pixKey.select();
+    document.execCommand('copy');
+    showCopyFeedback();
+  }
+
+  function showCopyFeedback() {
+    feedback.style.display = 'block';
+    setTimeout(() => {
+      feedback.style.display = 'none';
+    }, 2000);
+  }
+
+  // Trackear evento
+  if (typeof gtag === 'function') {
+    gtag('event', 'pagamento_pix_copied');
+  }
+  if (typeof fbq === 'function') {
+    fbq('trackCustom', 'PagamentoPIXCopied');
+  }
+}
+
+// Validar upload e ativar botão
+document.getElementById('receipt-file').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const status = document.getElementById('receipt-status');
+  const btn = document.getElementById('whatsapp-btn');
+
+  if (!file) {
+    btn.disabled = true;
+    status.textContent = '';
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    status.textContent = '❌ Arquivo muito grande (máximo 5MB)';
+    status.style.color = '#e53e3e';
+    btn.disabled = true;
+    return;
+  }
+
+  if (!['image/png', 'image/jpeg'].includes(file.type)) {
+    status.textContent = '❌ Apenas PNG ou JPG são aceitos';
+    status.style.color = '#e53e3e';
+    btn.disabled = true;
+    return;
+  }
+
+  // Salvar em sessionStorage como base64
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    sessionStorage.setItem('receipt_image', evt.target.result);
+    status.textContent = '✓ Comprovante preparado - pronto para enviar';
+    status.style.color = '#10b981';
+    btn.disabled = false;
+
+    // Trackear evento
+    if (typeof gtag === 'function') {
+      gtag('event', 'pagamento_comprovante_upload');
+    }
+    if (typeof fbq === 'function') {
+      fbq('trackCustom', 'PagamentoComprovanteUpload');
+    }
+  };
+  reader.readAsDataURL(file);
+});
+
+// Enviar ao WhatsApp
+function sendToWhatsApp() {
+  const fullName = getQueryParam('invitee_full_name');
+  const eventStartTime = getQueryParam('event_start_time');
+  const eventTypeName = getQueryParam('event_type_name');
+
+  if (!fullName || !eventStartTime) {
+    alert('Erro ao recuperar dados da consulta. Verifique o link.');
+    return;
+  }
+
+  const date = new Date(eventStartTime);
+  const formatter = new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  const formattedDate = formatter.format(date);
+
+  const message = `Olá! Já realizei o pagamento de R$60 da minha consulta agendada em ${formattedDate} com ${eventTypeName || 'especialista'}. Segue em anexo o comprovante de pagamento. \n\nNome: ${fullName}`;
+
+  const whatsappNumber = '5511951785663';
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  // Trackear evento
+  if (typeof gtag === 'function') {
+    gtag('event', 'pagamento_enviado_whatsapp', {
+      especialidade: eventTypeName,
+      nome: fullName
+    });
+  }
+  if (typeof fbq === 'function') {
+    fbq('track', 'InitiateCheckout', {content_name: 'pagamento_whatsapp'});
+  }
+
+  // Abrir WhatsApp em nova aba
+  window.open(whatsappUrl, '_blank');
+}
+
+// Carregar dados da consulta
+function loadConsultationData() {
+  const fullName = getQueryParam('invitee_full_name');
+  const eventTypeName = getQueryParam('event_type_name');
+  const eventStartTime = getQueryParam('event_start_time');
+  const consultationDetailsDiv = document.getElementById('consultation-details');
+
+  if (!fullName || !eventStartTime) {
+    showFallback();
+    return;
+  }
+
+  // Formatar hora em pt-BR
+  const date = new Date(eventStartTime);
+  const formatter = new Intl.DateTimeFormat('pt-BR', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  const formattedDate = formatter.format(date);
+
+  // Preencher detalhes
+  consultationDetailsDiv.innerHTML = `
+    <div style="text-align:center;">
+      <p style="font-size:16px;color:var(--navy);margin-bottom:4px;font-weight:600;">
+        ${fullName}
+      </p>
+      <p style="font-size:14px;color:var(--g500);margin:6px 0;">
+        📋 Consulta com <strong>${eventTypeName || 'especialista'}</strong>
+      </p>
+      <p style="font-size:14px;color:var(--g500);">
+        📅 ${formattedDate}
+      </p>
+    </div>`;
+
+  // Trackear evento
+  if (typeof gtag === 'function') {
+    gtag('event', 'pagamento_view', {
+      especialidade: eventTypeName,
+      nome: fullName
+    });
+  }
+  if (typeof fbq === 'function') {
+    fbq('track', 'ViewContent', {
+      content_name: 'pagamento_page',
+      content_type: 'payment_page'
+    });
+  }
+}
+
+// Fallback se não houver parâmetros
+function showFallback() {
+  document.documentElement.innerHTML = `
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8"/>
+      <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+      <title>Erro — Clara Consulta</title>
+      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+      <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'DM Sans',sans-serif;color:#334155;}
+        :root{--navy:#1B3A5C;--accent:#00BFA5;}
+      </style>
+    </head>
+    <body>
+      <section style="padding:80px 20px;text-align:center;min-height:100vh;display:flex;align-items:center;justify-content:center;">
+        <div style="max-width:480px;">
+          <div style="font-size:64px;margin-bottom:20px;">❌</div>
+          <h1 style="color:var(--navy);margin-bottom:16px;font-size:28px;">Algo deu errado</h1>
+          <p style="color:#64748B;margin-bottom:20px;line-height:1.6;">
+            Não conseguimos recuperar os dados da sua consulta.
+            Verifique se o link está correto ou entre em contato conosco pelo WhatsApp.
+          </p>
+          <a href="https://wa.me/5511951785663?text=Ol%C3%A1!%20Preciso%20de%20ajuda%20com%20meu%20pagamento%20de%20consulta." target="_blank" style="display:inline-block;background:var(--accent);color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px;">
+            📲 Contatar WhatsApp
+          </a>
+        </div>
+      </section>
+    </body>
+    </html>`;
+}
+
+// Inicializar ao carregar página
+window.addEventListener('load', loadConsultationData);
+</script>
+
+</body>
+</html>
