@@ -284,8 +284,12 @@ var savedCep='';
 var allSteps=['form-card','step-modality','step-em-casa','step-farmacia-loading','step-farmacia-match','step-farmacia-no-match'];
 
 function showStep(id){
-  allSteps.forEach(function(s){document.getElementById(s).style.display='none';});
+  allSteps.forEach(function(s){
+    var stepEl=document.getElementById(s);
+    if(stepEl) stepEl.style.display='none';
+  });
   var el=document.getElementById(id);
+  if(!el) return;
   el.style.display='block';
   el.scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -396,7 +400,6 @@ function openCalendlyAndRedirect(modalidade){
 
   // Abrir Calendly na mesma aba para que o redirect funcione corretamente
   window.location.href = 'https://calendly.com/claramed-app/30min';
-}
 }
 
 </script>
