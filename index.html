@@ -303,9 +303,29 @@ function showStep(id){
   el.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
+function submitLeadToSheets(cep,cel,especialidade){
+  var baseUrl='https://script.google.com/macros/s/AKfycbxb99bI1kBnmZJtbgHCFIyw6_FIy6U752V0XdcKQM4aKBgmakvuueDPZhyok-mER2yB/exec';
+  var qs='?cep='+encodeURIComponent(cep)
+    +'&cel='+encodeURIComponent(cel)
+    +'&origem='+encodeURIComponent('site')
+    +'&especialidade='+encodeURIComponent(especialidade||'');
+  var url=baseUrl+qs;
+
+  if(window.fetch){
+    fetch(url,{method:'GET',mode:'no-cors',keepalive:true}).catch(function(){
+      var ping=new Image();
+      ping.src=url+'&_t='+(Date.now());
+    });
+  }else{
+    var ping=new Image();
+    ping.src=url+'&_t='+(Date.now());
+  }
+}
+
 function handleSubmit(){
   var cep=document.getElementById('cep').value.replace(/\D/g,'');
   var cel=document.getElementById('cel').value.replace(/\D/g,'');
+  var esp=document.getElementById('especialidade').value;
   var err=document.getElementById('form-error');
   if(cep.length!==8){err.textContent='Preencha um CEP válido (8 dígitos)';err.style.display='block';return;}
   if(cel.length<10){err.textContent='Preencha um celular válido';err.style.display='block';return;}
@@ -313,8 +333,7 @@ function handleSubmit(){
   savedCep=cep;
   if(typeof fbq==='function') fbq('track','Lead',{content_name:'form_cep_cel'});
   if(typeof gtag==='function') gtag('event','conversion',{'send_to':'AW-17979914508/ihsSCNTL0f8bEIzyvv1C','value':1.0,'currency':'BRL'});
-  // Send to Google Sheets
-  var ifr=document.getElementById('gs');if(!ifr){ifr=document.createElement('iframe');ifr.id='gs';ifr.name='gs';ifr.style.display='none';document.body.appendChild(ifr);}var fm=document.createElement('form');fm.method='GET';fm.action='https://script.google.com/macros/s/AKfycbxb99bI1kBnmZJtbgHCFIyw6_FIy6U752V0XdcKQM4aKBgmakvuueDPZhyok-mER2yB/exec';fm.target='gs';var esp=document.getElementById('especialidade').value;fm.innerHTML='<input name="cep" value="'+cep+'"><input name="cel" value="'+cel+'"><input name="origem" value="site"><input name="especialidade" value="'+esp+'">';document.body.appendChild(fm);fm.submit();fm.remove();
+  submitLeadToSheets(cep,cel,esp);
   trackEvent('form_submit',{cep:cep});
   showStep('step-modality');
 }
