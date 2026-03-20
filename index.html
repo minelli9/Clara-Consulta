@@ -316,24 +316,57 @@ function handleFarmacia(){
     .then(function(r){return r.text();})
     .then(function(csv){
       console.log('CSV recebido:', csv);
-      var lines=csv.split('\n');
+      console.log('CSV length:', csv.length);
+
+      // Parse CSV levando em conta espaços e diferentes formatos
+      var lines=csv.trim().split(/\r?\n/);
       console.log('Linhas totais:', lines.length);
-      var header=lines[0].split(',');
+
+      if(lines.length < 2) {
+        console.error('CSV vazio ou com poucas linhas');
+        showStep('step-farmacia-no-match');
+        return;
+      }
+
+      var header=lines[0].split(',').map(function(h){return h.trim();});
       console.log('Header:', header);
-      var cepCol=header.findIndex(function(h){return h.trim().toLowerCase().replace(/"/g,'')==='cep';});
+
+      // Procura pela coluna "cep" (case-insensitive)
+      var cepCol=-1;
+      for(var h=0; h<header.length; h++){
+        var col=header[h].toLowerCase().replace(/"/g,'').trim();
+        if(col === 'cep'){
+          cepCol=h;
+          break;
+        }
+      }
       console.log('Coluna CEP encontrada no índice:', cepCol);
-      if(cepCol===-1) cepCol=0;
+
+      if(cepCol===-1) {
+        console.warn('Coluna CEP não encontrada, tentando coluna 0');
+        cepCol=0;
+      }
+
       var prefixes=[];
-      for(var i=1;i<lines.length;i++){
-        var cols=lines[i].split(',');
+      for(var i=1; i<lines.length; i++){
+        if(!lines[i].trim()) continue; // pula linhas vazias
+        var cols=lines[i].split(',').map(function(c){return c.trim();});
         if(cols[cepCol]){
-          var prefix=cols[cepCol].trim().replace(/"/g,'').replace(/\D/g,'');
-          prefixes.push(prefix);
+          var prefix=cols[cepCol].replace(/"/g,'').replace(/\D/g,'');
+          if(prefix.length > 0) {
+            prefixes.push(prefix);
+          }
         }
       }
       console.log('Prefixos encontrados:', prefixes);
       console.log('CEP do usuário:', savedCep);
-      var match=prefixes.some(function(p){return p.length>0 && savedCep.substring(0,p.length)===p;});
+
+      var match=prefixes.some(function(p){
+        var isMatch = savedCep.substring(0, p.length) === p;
+        console.log('Comparando "' + savedCep + '" com prefixo "' + p + '": ' + isMatch);
+        return isMatch && p.length > 0;
+      });
+
       console.log('Match encontrado?', match);
       if(match){
         showStep('step-farmacia-match');
