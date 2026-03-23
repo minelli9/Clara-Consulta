@@ -20,6 +20,7 @@ export default async function handler(req, res) {
   const cel = String(source.cel || '').replace(/\D/g, '');
   const especialidade = String(source.especialidade || '');
   const origem = String(source.origem || 'site');
+  const timestamp = new Date().toISOString();
 
   if (cep.length !== 8 || cel.length < 10) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,6 +28,16 @@ export default async function handler(req, res) {
   }
 
   const qs = new URLSearchParams({
+    a: timestamp,
+    b: cep,
+    c: cel,
+    d: origem,
+    e: especialidade,
+    A: timestamp,
+    B: cep,
+    C: cel,
+    D: origem,
+    E: especialidade,
     cep,
     cel,
     especialidade,
@@ -36,8 +47,18 @@ export default async function handler(req, res) {
   });
 
   try {
-    const response = await fetch(`${APPS_SCRIPT_URL}?${qs.toString()}`, { redirect: 'follow' });
-    const text = await response.text();
+    let response = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: qs.toString(),
+      redirect: 'follow'
+    });
+    let text = await response.text();
+
+    if (!response.ok || !text || text.toLowerCase().indexOf('ok') === -1) {
+      response = await fetch(`${APPS_SCRIPT_URL}?${qs.toString()}`, { redirect: 'follow' });
+      text = await response.text();
+    }
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     return res.status(200).json({ ok: true, status: response.status, body: text.slice(0, 120) });
