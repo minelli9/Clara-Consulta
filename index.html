@@ -309,6 +309,8 @@ function submitLeadToSheets(cep,cel,especialidade){
     +'&cel='+encodeURIComponent(cel)
     +'&origem='+encodeURIComponent('site')
     +'&especialidade='+encodeURIComponent(especialidade||'')
+    +'&sheet='+encodeURIComponent('Sheet1')
+    +'&aba='+encodeURIComponent('Sheet1')
     +'&_t='+(Date.now());
   var url=baseUrl+qs;
 
